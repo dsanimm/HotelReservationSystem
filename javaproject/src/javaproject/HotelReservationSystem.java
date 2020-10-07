@@ -38,10 +38,15 @@ public class HotelReservation implements Serializable {
 		System.out.println("Enter weekend rate for regular customer");
 		int weekendRateRegularCustomer = s.nextInt();
 
+		System.out.println("Enter Rating for the Hotel");
+		int rating = s.nextInt();
+
+
 		Hotel hotel = new Hotel();
 		hotel.setHotelName(hotelName);
 		hotel.setWeekdayRateRegularCustomer(weekdayRateRegularCustomer);
 		hotel.setWeekdayRateRegularCustomer(weekendRateRegularCustomer);
+		hotel.setHotelRatings(rating);
 		hotel_List.add(hotel);
 
 		try {
