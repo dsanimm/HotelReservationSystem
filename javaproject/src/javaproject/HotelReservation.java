@@ -38,10 +38,14 @@ public class HotelReservation implements Serializable {
 		System.out.println("Enter weekend rate for regular customer");
 		int weekendRateRegularCustomer = s.nextInt();
 
+		System.out.println("Enter Rating for the Hotel");
+		int rating = s.nextInt();
+
 		Hotel hotel = new Hotel();
 		hotel.setHotelName(hotelName);
 		hotel.setWeekdayRateRegularCustomer(weekdayRateRegularCustomer);
-		hotel.setWeekdayRateRegularCustomer(weekendRateRegularCustomer);
+		hotel.setWeekendRateRegularCustomer(weekendRateRegularCustomer);
+		hotel.setHotelRatings(rating);
 		hotel_List.add(hotel);
 
 		try {
@@ -68,7 +72,7 @@ public class HotelReservation implements Serializable {
 		LocalDate startDate = LocalDate.parse(startRange, formatter);
 		LocalDate endDate = LocalDate.parse(endRange, formatter);
 		LocalDate tempDate = startDate;
-		Map<String,Integer> totalRates = new HashMap<String,Integer>();
+		Map<String, Integer> totalRates = new HashMap<String, Integer>();
 
 		try {
 			myReader = new FileReader(file);
@@ -84,7 +88,7 @@ public class HotelReservation implements Serializable {
 					tempDate = tempDate.plusDays(1);
 					DayOfWeek dayOfWeek = DayOfWeek.from(tempDate);
 					if (dayOfWeek.getValue() == 6 || dayOfWeek.getValue() == 7) {
-
+						rate = weekendrate;
 					} else {
 						rate = weekdayrate;
 					}
@@ -92,13 +96,64 @@ public class HotelReservation implements Serializable {
 				}
 				tempDate = startDate;
 				System.out.println("Rate for " + hotel[0] + " for given range fo dates are: " + totalRate);
-				totalRates.put(hotel[0],totalRate);
+				totalRates.put(hotel[0], totalRate);
 			}
 		} catch (
 
 		Exception ex) {
 			ex.printStackTrace();
 		}
-System.out.println("Minimum is: "+totalRates.entrySet().stream().min((s1,s2)->s1.getValue()-s2.getValue()));
+		System.out.println(
+				"Minimum is: " + totalRates.entrySet().stream().min((s1, s2) -> s1.getValue() - s2.getValue()));
+	}
+
+	public static void findCheapBestRatedHotel() {
+		System.out.println("Enter Start Date");
+		String startRange = s.next();
+		System.out.println("Enter End Date");
+		String endRange = s.next();
+		System.out.println(endRange);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMMyyyy");
+		LocalDate startDate = LocalDate.parse(startRange, formatter);
+		LocalDate endDate = LocalDate.parse(endRange, formatter);
+		LocalDate tempDate = startDate;
+		Map<Integer, Hotel> totalRates = new HashMap<Integer, Hotel>();
+
+		try {
+			myReader = new FileReader(file);
+			BufferedReader br = new BufferedReader(myReader);
+
+			String line;
+			while ((line = br.readLine()) != null) {
+				int totalRate = 0, rate = 0;
+				String[] hotel = line.split(",");
+				int weekendrate = Integer.parseInt(hotel[1]);
+				int weekdayrate = Integer.parseInt(hotel[2]);
+				while (tempDate.compareTo(endDate) != 0) {
+					tempDate = tempDate.plusDays(1);
+					DayOfWeek dayOfWeek = DayOfWeek.from(tempDate);
+					if (dayOfWeek.getValue() == 6 || dayOfWeek.getValue() == 7) {
+						rate = weekendrate;
+					} else {
+						rate = weekdayrate;
+					}
+					totalRate = totalRate + rate;
+				}
+				tempDate = startDate;
+				System.out.println("Rate for " + hotel[0] + " for given range fo dates are: " + totalRate);
+				totalRates.put(totalRate, new Hotel(hotel[0], Integer.parseInt(hotel[1]), Integer.parseInt(hotel[2]),
+						Integer.parseInt(hotel[3])));
+			}
+		} catch (
+
+		Exception ex) {
+			ex.printStackTrace();
+		}
+		System.out.println(totalRates.entrySet().stream()
+				.max((s1, s2) -> s1.getValue().hotelRatings - s2.getValue().hotelRatings).stream()
+				.min((a, b) -> a.getKey() - b.getKey()).map(a -> a.getValue()).toString());
+
+				
+
 	}
 }
