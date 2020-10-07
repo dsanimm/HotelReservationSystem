@@ -1,6 +1,8 @@
 package javaproject;
 
-public class Hotel {
+import java.io.Serializable;
+
+public class Hotel implements Serializable{
 	String hotelName;
 	int weekendRateRegularCustomer;
 	int weekdayRateRegularCustomer;
@@ -22,5 +24,11 @@ public class Hotel {
 	public void setWeekdayRateRegularCustomer(int weekdayRateRegularCustomer) {
 		this.weekdayRateRegularCustomer = weekdayRateRegularCustomer;
 	}
+	@Override
+	public String toString() {
+		return hotelName + ","  + weekendRateRegularCustomer
+				+ ","+ weekdayRateRegularCustomer;
+	}
+
 	
 }
